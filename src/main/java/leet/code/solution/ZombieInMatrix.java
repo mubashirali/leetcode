@@ -47,7 +47,17 @@ public class ZombieInMatrix {
                 grid.get(matrix.row).set(matrix.col, 1);
             }
         }
-        return count == 0 ? -1 : count;
+
+        //Returning -1 in case all humans are not infect.
+        for (List<Integer> rows : grid) {
+            for (int j = 0; j < rows.size(); j++) {
+                if (rows.get(j) == 0) {
+                    return -1;
+                }
+            }
+        }
+
+        return count;
     }
 
     private static Queue<Matrix> getAdjMatrix(List<List<Integer>> grid, int rows, int columns) {
