@@ -5,27 +5,27 @@ import java.util.Queue;
 
 /**
  * In a given grid, each cell can have one of three values:
- *
- *     the value 0 representing an empty cell;
- *     the value 1 representing a fresh orange;
- *     the value 2 representing a rotten orange.
- *
+ * <p>
+ * the value 0 representing an empty cell;
+ * the value 1 representing a fresh orange;
+ * the value 2 representing a rotten orange.
+ * <p>
  * Every minute, any fresh orange that is adjacent (4-directionally) to a rotten orange becomes rotten.
- *
+ * <p>
  * Return the minimum number of minutes that must elapse until no cell has a fresh orange.  If this is impossible, return -1 instead.
  * Example 1:
- *
+ * <p>
  * Input: [[2,1,1],[1,1,0],[0,1,1]]
  * Output: 4
- *
+ * <p>
  * Example 2:
- *
+ * <p>
  * Input: [[2,1,1],[0,1,1],[1,0,1]]
  * Output: -1
  * Explanation:  The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally.
- *
+ * <p>
  * Example 3:
- *
+ * <p>
  * Input: [[0,2]]
  * Output: 0
  * Explanation:  Since there are already no fresh oranges at minute 0, the answer is just 0.
@@ -44,26 +44,35 @@ public class RottingOranges {
      */
     public static int orangesRotting(int[][] grid) {
         int count = 0;
+        int result = 0;
+        int target = grid.length * grid[0].length;
 
-        for (int i = 0; i < grid.length; i++) {
-            Queue<Matrix> adjMatrix = new LinkedList<>();
-            for (int j = 0; j < grid.length; j++) {
-                for (int k = 0; k < grid[j].length; k++) {
-                    if (grid[j][k] == 2) {
-                        adjMatrix.addAll(getAdjMatrix(grid, j, k));
-                    }
+        Queue<Matrix> adjMatrix = new LinkedList<>();
+        for (int j = 0; j < grid.length; j++) {
+            for (int k = 0; k < grid[j].length; k++) {
+                if (grid[j][k] == 2) {
+                    adjMatrix.addAll(getAdjMatrix(grid, j, k));
+                    count++;
                 }
             }
-            if (!adjMatrix.isEmpty()) {
-                count++;
-                if (i <= grid.length - 1) {
-                    i--;
-                }
+        }
+
+        while (!adjMatrix.isEmpty()) {
+            final int size = adjMatrix.size();
+            if (target == count) {
+                break;
             }
-            while (!adjMatrix.isEmpty()) {
+            for (int i = 0; i < size; i++) {
                 final Matrix matrix = adjMatrix.poll();
-                grid[matrix.row][matrix.col] = 2;
+                final Queue<Matrix> queue = getAdjMatrix(grid, matrix.row, matrix.col);
+                adjMatrix.addAll(queue);
+                while (!queue.isEmpty()) {
+                    final Matrix poll = queue.poll();
+                    grid[poll.row][poll.col] = 2;
+                    count++;
+                }
             }
+            result++;
         }
 
         for (int[] rows : grid) {
@@ -74,7 +83,7 @@ public class RottingOranges {
             }
         }
 
-        return count;
+        return result;
     }
 
     private static Queue<Matrix> getAdjMatrix(int[][] grid, int rows, int columns) {

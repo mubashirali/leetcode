@@ -14,20 +14,92 @@ import static java.util.Arrays.asList;
 public class ZombieInMatrix {
 
     public static void main(String[] args) {
-        System.out.println(minHours(asList(
+        System.out.println(minHoursUsingBFS(asList(
                 asList(0, 1, 1, 0, 1),
                 asList(0, 1, 0, 1, 0),
                 asList(0, 0, 0, 0, 1),
                 asList(0, 1, 0, 0, 0))));
 
         System.out.println(
-                minHours(asList(asList(1, 0, 0, 0),
+                minHoursUsingBFS(asList(
+                        asList(1, 0, 0, 0),
+                        asList(0, 1, 0, 1),
+                        asList(0, 0, 0, 0),
+                        asList(0, 0, 0, 0))
+                ));
+
+        System.out.println("With brute force");
+        System.out.println(minHours(asList(
+                asList(0, 1, 1, 0, 1),
+                asList(0, 1, 0, 1, 0),
+                asList(0, 0, 0, 0, 1),
+                asList(0, 1, 0, 0, 0))));
+        System.out.println(
+                minHours(asList(
+                        asList(1, 0, 0, 0),
                         asList(0, 1, 0, 1),
                         asList(0, 0, 0, 0),
                         asList(0, 0, 0, 0))));
 
     }
 
+    /**
+     * Complexity O(n2)
+     *
+     * @param grid
+     * @return
+     */
+    private static int minHoursUsingBFS(List<List<Integer>> grid) {
+        int count = 0;
+        int result = 0;
+        int target = grid.size() * grid.get(0).size();
+        final Queue<Matrix> adjMatrix = new LinkedList<>();
+        for (int i = 0; i < grid.size(); i++) {
+            for (int j = 0; j < grid.get(i).size(); j++) {
+                if (grid.get(i).get(j) == 1) {
+                    adjMatrix.add(new Matrix(i, j));
+                    count++;
+                }
+            }
+        }
+
+        while (!adjMatrix.isEmpty()) {
+            if (target == count) {
+                break;
+            }
+            final int size = adjMatrix.size();
+            for (int i = 0; i < size; i++) {
+                final Matrix matrix = adjMatrix.poll();
+                final Queue<Matrix> queue = getAdjMatrix(grid, matrix.row, matrix.col);
+                adjMatrix.addAll(queue);
+                while (!queue.isEmpty()) {
+                    final Matrix poll = queue.poll();
+                    grid.get(poll.row).set(poll.col, 1);
+                    count++;
+                }
+            }
+
+            result++;
+        }
+
+        //Returning -1 in case all humans are not infect.
+        for (List<Integer> rows : grid) {
+            for (int j = 0; j < rows.size(); j++) {
+                if (rows.get(j) == 0) {
+                    return -1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Complexity O(n3)
+     *
+     * @param grid
+     * @return
+     */
     private static int minHours(List<List<Integer>> grid) {
         int count = 0;
         for (int i = 0; i < grid.size(); i++) {
