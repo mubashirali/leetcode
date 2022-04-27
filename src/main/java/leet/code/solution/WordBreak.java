@@ -5,6 +5,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 /**
+ * https://youtu.be/LPs6Qo5qlJM -- solution
  * Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
  * <p>
  * Note:
