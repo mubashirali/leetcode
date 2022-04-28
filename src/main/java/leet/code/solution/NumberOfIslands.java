@@ -88,6 +88,51 @@ public class NumberOfIslands {
         }
         return stack;
     }
+    
+    public static int numIslands2ndSolution(char[][] grid) {
+        int count = 0;
+        Deque<Position> stack = new ArrayDeque<>();
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] == '1') {
+                    stack.push(new Position(i, j));
+                    grid[i][j] = 'x';
+                    checkIsland(grid, stack);
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+    
+    private static void checkIsland(char[][] grid, Deque<Position> stack) {
+        while (!stack.isEmpty()) {
+            Position position = stack.pop();
+            int row = position.row;
+            int col = position.col;
+
+            if (col < grid[row].length - 1 && grid[row][col + 1] == '1') {
+                stack.push(new Position(row, col + 1));
+                grid[row][col + 1] = 'x';
+            }
+            if (row < grid.length - 1 && grid[row + 1][col] == '1') {
+                stack.push(new Position(row + 1, col));
+                grid[row + 1][col] = 'x';
+            }
+            if (col > 0  && grid[row][col - 1] == '1') {
+                stack.push(new Position(row, col - 1));
+                grid[row][col - 1] = 'x';
+            }
+            if (row > 0  && grid[row - 1][col] == '1') {
+                stack.push(new Position(row - 1, col));
+                grid[row - 1][col] = 'x';
+            }
+        }
+
+    }
+
 
     static class Position {
         int row;
