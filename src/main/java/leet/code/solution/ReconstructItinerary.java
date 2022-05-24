@@ -58,5 +58,31 @@ public class ReconstructItinerary {
         }
         result.add(airport);
     }
+    
+   public List<String> findItinerarySimplified(List<List<String>> tickets) {
+      if (tickets.isEmpty()) {
+            return List.of();
+        }
+        Map<String, PriorityQueue<String>> adjacents = new HashMap<>();
+        LinkedList<String> list = new LinkedList<>();
+        Stack<String> stack = new Stack<>();
+        for (List<String> ticket : tickets) {
+            adjacents.putIfAbsent(ticket.get(0), new PriorityQueue<>());
+            adjacents.get(ticket.get(0)).add(ticket.get(1));
+        }
+
+        stack.push("JFK");
+        while (!stack.isEmpty()) {
+            String item = stack.peek();
+            Queue<String> adjacent = adjacents.getOrDefault(item, new PriorityQueue<>());
+            if (!adjacent.isEmpty()) {
+                String poll = adjacent.poll();
+                stack.add(poll);
+            } else {
+                list.addFirst(stack.pop());
+            }
+        }
+        return list;
+    }
 
 }
