@@ -48,6 +48,31 @@ public class LongestSubstring {
         }
         return max;
     }
+    
+	public static int simplerLengthOfLongestSubstring(String s) {
+		int max = 1;
+		Set<Character> set = new HashSet<>();
+		if (s.length() == 0) {
+			return 0;
+		}
+		set.add(s.charAt(0));
+		int i = 0, j = 1;
+		while (j < s.length()) {
+			if (set.add(s.charAt(j))) {
+				max = Math.max(max, set.size());
+				j++;
+			} else {
+				set.remove(s.charAt(i));
+				i++;
+				if (i == j) {
+					set.add(s.charAt(i));
+					j++;
+				}
+			}
+		}
+
+		return max;
+	}
 
     public static void main(String[] args) {
         System.out.println(lengthOfLongestSubstring("abba"));
