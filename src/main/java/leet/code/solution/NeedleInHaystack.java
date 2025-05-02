@@ -27,6 +27,9 @@ without using strings functions
 */
 class Solution {
     public int strStr(String haystack, String needle) {
+        // One liner:
+        // return haystack.indexOf(needle);
+        
         int k = 0;
         int max = needle.length() - 1;
         for (int i = 0; i < haystack.length(); i++) {
