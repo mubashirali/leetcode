@@ -1,3 +1,5 @@
+package leet.code;
+
 /**
 https://leetcode.com/problems/minimum-amount-of-time-to-collect-garbage/
 2391. Minimum Amount of Time to Collect Garbage
@@ -48,26 +50,31 @@ It takes a total of 7 + 15 + 15 = 37 minutes to collect all the garbage.
 */
 
 
-class Solution {
-    public int strStr(String haystack, String needle) {
-        int k = 0;
-        int max = needle.length() - 1;
-        for (int i = 0; i < haystack.length(); i++) {
-            if (i + max < haystack.length() && haystack.charAt(i) == needle.charAt(0)
-                    && haystack.charAt(i + max) == needle.charAt(max)) {
-                while (k <= max) {
-                    if (haystack.charAt(i + k) == needle.charAt(k)) {
-                        k++;
-                    } else {
-                        k = 0;
-                        break;
+class GarbageCollection {
+    public int garbageCollection(String[] garbage, int[] travel) {
+        int count = 0;
+        List<Character> list = Arrays.asList('M', 'P', 'G');
+
+        for (char c : list) {
+            int t = 0;
+            for (int i = 0; i < garbage.length; i++) {
+                int k = 0;
+                while (k < garbage[i].length()) {
+                    if (garbage[i].charAt(k) == c) {
+                        count++;
+                        t = i;
                     }
+                    k++;
                 }
-                if (k == needle.length()) {
-                    return i;
-                }
+
+            }
+            t--;
+            while (t >= 0) {
+                count += travel[t];
+                t--;
             }
         }
-        return -1;
+
+        return count;
     }
 }
