@@ -16,6 +16,31 @@ package leet.code.solution;
  */
 public class LongestPalindromic {
 
+    public static String longestPalindromeCorrect(String s) {
+        String pal = "";
+        for (int k = 0; k < s.length(); k++) {
+            int j = s.length() - 1;
+            while (k <= j) {
+                if (s.charAt(k) == s.charAt(j)) {
+                    String substring = s.substring(k, j + 1);
+                    if (isPalindromeCorrect(substring)) {
+                        if (pal.length() < substring.length()) {
+                            pal = substring;
+                        }
+                    }
+                }
+                j--;
+            }
+        }
+        return pal;
+    }
+
+    private static boolean isPalindromeCorrect(String substring) {
+        StringBuilder sb = new StringBuilder(substring);
+
+        return substring.contentEquals(sb.reverse());
+    }
+    
     /**
      *
      * Works but time time Limit Exceeded issue for string really big string
